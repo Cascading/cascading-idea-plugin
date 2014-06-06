@@ -1,0 +1,54 @@
+<idea-plugin version="2">
+  <id>com.concurrent.intellij.plugin</id>
+  <name>Cascading Plugin</name>
+  <version>1.0</version>
+  <vendor email="dkumar@concurrentinc.com" url="http://www.concurrentinc.com">Concurrent Inc.</vendor>
+
+  <description><![CDATA[
+     <b>Cascading Plugin</b> allows you to quickly develop and debug Cascading applications inside IntelliJ IDEA IDE.
+        It allows you to:
+     <ul>
+        <li>Download and add the Cascading Core and the Driven Plugin jars to the classpath of the project.</li>
+        <li>Launch Driven in the browser from the debug panel.</li>
+     </ul>
+    ]]></description>
+
+  <change-notes>
+  </change-notes>
+
+  <idea-version since-build="131"/>
+
+
+  <extensions defaultExtensionNs="com.intellij">
+      <facetType implementation="cascading.intellij.plugin.facet.DrivenFacetType"/>
+      <framework.detector implementation="cascading.intellij.plugin.facet.DrivenFacetType$DrivenFacetDetector"/>
+      <frameworkSupport implementation="cascading.intellij.plugin.facet.DrivenFrameworkSupportProvider"/>
+      <library.type implementation="cascading.intellij.plugin.library.DrivenLibraryType"/>
+      <runConfigurationExtension implementation="cascading.intellij.plugin.extensions.CascadingRunDebugExtension"/>
+    <!--
+    <applicationService serviceInterface="com.intellij.framework.library.DownloadableLibraryService"
+                          serviceImplementation="cascading.intellij.plugin.library.DrivenDownloadableLibraryServiceImpl" />
+                          -->
+  </extensions>
+
+  <application-components>
+    <component>
+      <implementation-class>cascading.intellij.plugin.DrivenApplicationComponent</implementation-class>
+    </component>
+  </application-components>
+
+  <project-components />
+
+  <actions>
+    <action id="DrivenUI" class="cascading.intellij.plugin.actions.LaunchDrivenAction" text="Show Driven UI"
+            description="Shows the driven UI for this application" icon="/icons/cascading-logo-2.png">
+      <keyboard-shortcut keymap="$default" first-keystroke="ctrl shift Z"/>
+      <add-to-group group-id="XDebugger.ToolWindow.LeftToolbar" anchor="first"/>
+    </action>
+
+    <group id="WicketForgeCreateGroup" class="cascading.intellij.plugin.facet.DrivenActionGroup" text="Cascading">
+            <add-to-group group-id="NewGroup" anchor="last"/>
+        </group>
+  </actions>
+
+</idea-plugin>
