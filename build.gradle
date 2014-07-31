@@ -19,7 +19,7 @@
  */
 
 apply plugin: 'java'
-apply plugin: 'idea'
+apply from: 'etc/idea.gradle'
 
 evaluationDependsOn( ':idea-deps' )
 
@@ -27,17 +27,22 @@ repositories {
   mavenCentral()
 }
 
-compileJava {
-  doFirst {
-    copy {
-      from 'META-INF'
-      into 'src/main/resources/META-INF/'
-      include 'plugin.xml'
-    }
-  }
+configurations {
+  ideaCompile
 }
 
 dependencies {
-  compile fileTree( dir: 'intellij-src/out/dist.all.ce/lib', include: '*.jar' )
+
+  ideaCompile fileTree( dir: 'intellij-src/out/dist.all.ce/lib', include: '*.jar' )
+
   testCompile group: 'junit', name: 'junit', version: '4.11'
 }
+
+compileJava {
+
+  dependsOn project(':idea-deps').build
+
+  // prevent local libs from entering the idea module file
+  classpath += configurations.ideaCompile
+}
+
