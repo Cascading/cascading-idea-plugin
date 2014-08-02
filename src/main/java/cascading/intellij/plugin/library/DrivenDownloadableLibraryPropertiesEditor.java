@@ -36,7 +36,6 @@ import com.intellij.openapi.roots.libraries.ui.LibraryEditorComponent;
 import com.intellij.openapi.roots.ui.configuration.libraryEditor.LibraryEditorBase;
 import com.intellij.openapi.roots.ui.configuration.libraryEditor.NewLibraryEditor;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.LibrariesContainer;
-import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.download.DownloadableFileSetVersions;
 import org.jetbrains.annotations.NotNull;
 
@@ -120,10 +119,9 @@ public class DrivenDownloadableLibraryPropertiesEditor extends DownloadableLibra
     for( FrameworkLibraryVersion version : versions )
       {
       if( version.getVersionString().equals( myCurrentVersionString ) )
-        {
         return version;
-        }
       }
+
     return versions.get( 0 );
     }
   }

@@ -23,18 +23,17 @@ package cascading.intellij.plugin.facet;
 import java.util.ArrayList;
 import java.util.List;
 
+import cascading.intellij.plugin.library.CascadingLibraryType;
 import cascading.intellij.plugin.library.DrivenDownloadableLibraryServiceImpl;
 import com.intellij.facet.FacetConfiguration;
 import com.intellij.facet.impl.ui.FacetEditorsFactoryImpl;
 import com.intellij.facet.ui.FacetEditorContext;
 import com.intellij.facet.ui.FacetEditorTab;
 import com.intellij.facet.ui.FacetValidatorsManager;
-import com.intellij.framework.library.DownloadableLibraryService;
 import com.intellij.util.messages.Topic;
-import cascading.intellij.plugin.library.DrivenLibraryType;
 import org.jdom.Element;
 
-public class DrivenFacetConfiguration implements FacetConfiguration
+public class CascadingFacetConfiguration implements FacetConfiguration
   {
   private static final String RESOURCEURLS_TAG = "resourceUrls";
   private static final String RESOURCEURL_TAG = "resourceUrl";
@@ -66,13 +65,17 @@ public class DrivenFacetConfiguration implements FacetConfiguration
     //  copy paste the FacetErrorPanel to create DrivenFacetErrorPanel, create a new DrivenFacetValidatorsManager
     //  and use that to bypass the normal Library Download setting control flow.
 
-    validatorsManager.registerValidator( FacetEditorsFactoryImpl.getInstanceImpl().createLibraryValidator(
-      new DrivenDownloadableLibraryServiceImpl().createDescriptionForType( DrivenLibraryType.class ),
-      editorContext,
-      validatorsManager,
-      "Driven Plugin"
-    ) );
-    return new FacetEditorTab[]{new DrivenFacetEditorTab( editorContext )};
+    validatorsManager.registerValidator(
+      FacetEditorsFactoryImpl.getInstanceImpl().createLibraryValidator(
+        new DrivenDownloadableLibraryServiceImpl().createDescriptionForType( CascadingLibraryType.class ),
+        editorContext,
+        validatorsManager,
+        "Driven Plugin"
+      )
+    );
+
+//    return new FacetEditorTab[]{new DrivenFacetEditorTab( editorContext )};
+    return new FacetEditorTab[]{};
     }
 
   @Override
@@ -80,18 +83,18 @@ public class DrivenFacetConfiguration implements FacetConfiguration
   public void readExternal( Element element )
     {
     Element resourceUrlsElement = element.getChild( RESOURCEURLS_TAG );
+
     if( resourceUrlsElement != null )
       {
       List resourceUrlsChildren = resourceUrlsElement.getChildren( RESOURCEURL_TAG );
-      if( resourceUrlsChildren != null )
+
+      if( resourceUrlsChildren == null )
+        return;
+
+      for( Object child : resourceUrlsChildren )
         {
-        for( Object child : resourceUrlsChildren )
-          {
-          if( child instanceof Element )
-            {
-            resourceUrls.add( ( (Element) child ).getAttributeValue( URL ) );
-            }
-          }
+        if( child instanceof Element )
+          resourceUrls.add( ( (Element) child ).getAttributeValue( URL ) );
         }
       }
     }

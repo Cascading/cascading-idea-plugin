@@ -22,13 +22,10 @@ package cascading.intellij.plugin.util;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Properties;
 
+import cascading.intellij.plugin.facet.CascadingFacet;
 import com.intellij.CommonBundle;
 import com.intellij.codeInsight.CodeInsightBundle;
-import com.intellij.ide.fileTemplates.FileTemplate;
-import com.intellij.ide.fileTemplates.FileTemplateManager;
-import com.intellij.ide.fileTemplates.FileTemplateUtil;
 import com.intellij.ide.util.PackageUtil;
 import com.intellij.openapi.application.ReadAction;
 import com.intellij.openapi.application.Result;
@@ -42,18 +39,14 @@ import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointer;
 import com.intellij.psi.PsiDirectory;
-import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiManager;
 import com.intellij.refactoring.PackageWrapper;
 import com.intellij.refactoring.move.moveClassesOrPackages.MoveClassesOrPackagesUtil;
-import com.intellij.refactoring.util.RefactoringMessageUtil;
 import com.intellij.refactoring.util.RefactoringUtil;
 import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.SmartList;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import cascading.intellij.plugin.facet.DrivenFacet;
-import cascading.intellij.plugin.Constants;
 
 public final class DrivenFileUtil
   {
@@ -66,20 +59,22 @@ public final class DrivenFileUtil
     {
     // all module source roots
     VirtualFile[] result = ModuleRootManager.getInstance( module ).getSourceRoots();
+
     // alternate paths
-    DrivenFacet drivenFacet = DrivenFacet.getInstance( module );
-    if( drivenFacet != null )
+    CascadingFacet cascadingFacet = CascadingFacet.getInstance( module );
+
+    if( cascadingFacet != null )
       {
       List<VirtualFile> alternateFiles = new SmartList<VirtualFile>();
       // add all valid alternate paths to list
-      for( VirtualFilePointer virtualFilePointer : drivenFacet.getResourcePaths() )
+      for( VirtualFilePointer virtualFilePointer : cascadingFacet.getResourcePaths() )
         {
         VirtualFile virtualFile = virtualFilePointer.getFile();
+
         if( virtualFile != null && virtualFile.isValid() )
-          {
           alternateFiles.add( virtualFile );
-          }
         }
+
       // if we have valid alternate paths
       if( !alternateFiles.isEmpty() )
         {
@@ -88,7 +83,7 @@ public final class DrivenFileUtil
         result = alternateFiles.toArray( new VirtualFile[ alternateFiles.size() ] );
         }
       }
-    //
+
     return result;
     }
 

@@ -76,7 +76,7 @@ class DrivenFacetEditorTab extends FacetEditorTab
   public void apply() throws ConfigurationException
     {
     additionalPathPanel.apply();
-    ApplicationManager.getApplication().getMessageBus().syncPublisher( DrivenFacetConfiguration.ADDITIONAL_PATHS_CHANGED ).run();
+    ApplicationManager.getApplication().getMessageBus().syncPublisher( CascadingFacetConfiguration.ADDITIONAL_PATHS_CHANGED ).run();
     }
 
   @Override
@@ -101,32 +101,34 @@ class DrivenFacetEditorTab extends FacetEditorTab
   private static class AdditionalPathPanel extends JPanel
     {
     private final FacetEditorContext editorContext;
-    private final DrivenFacet drivenFacet;
+    private final CascadingFacet cascadingFacet;
     private DefaultListModel additionalPathModel = new DefaultListModel(); // List of VirtualFilePointer
 
     public AdditionalPathPanel( @NotNull FacetEditorContext editorContext )
       {
       super( new BorderLayout() );
+
       this.editorContext = editorContext;
-      this.drivenFacet = (DrivenFacet) editorContext.getFacet();
+      this.cascadingFacet = (CascadingFacet) editorContext.getFacet();
 
       reset(); // fill current items into model
 
       final JBList listComponent = new JBList( additionalPathModel );
+
       listComponent.setSelectionMode( ListSelectionModel.SINGLE_SELECTION );
       listComponent.setCellRenderer( new AdditionalPathListCellRenderer() );
       listComponent.getEmptyText().setText( "No additional paths defined" );
+
       listComponent.addMouseListener( new MouseAdapter()
       {
       @Override
       public void mouseClicked( MouseEvent e )
         {
         if( e.getClickCount() == 2 )
-          {
           doEdit( listComponent.getSelectedIndex() );
-          }
         }
       } );
+
       JPanel panel = ToolbarDecorator.createDecorator( listComponent )
         .setAddAction( new AnActionButtonRunnable()
         {
@@ -150,44 +152,44 @@ class DrivenFacetEditorTab extends FacetEditorTab
           ListUtil.removeSelectedItems( listComponent );
           }
         } ).setToolbarPosition( ActionToolbarPosition.TOP ).createPanel();
+
       UIUtil.addBorder( panel, IdeBorderFactory.createTitledBorder( "Additional Resource Search Path", false ) );
+
       add( panel, BorderLayout.CENTER );
       }
 
     public void reset()
       {
       additionalPathModel.clear();
-      for( VirtualFilePointer filePointer : drivenFacet.getResourcePaths() )
-        {
+
+      for( VirtualFilePointer filePointer : cascadingFacet.getResourcePaths() )
         additionalPathModel.addElement( filePointer );
-        }
       }
 
     public boolean isModified()
       {
-      List<VirtualFilePointer> originalList = drivenFacet.getResourcePaths();
+      List<VirtualFilePointer> originalList = cascadingFacet.getResourcePaths();
+
       if( originalList.size() != additionalPathModel.size() )
-        {
         return true;
-        }
+
       for( int i = 0, originalListSize = originalList.size(); i < originalListSize; i++ )
         {
         if( !originalList.get( i ).equals( additionalPathModel.get( i ) ) )
-          {
           return true;
-          }
         }
+
       return false;
       }
 
     public void apply()
       {
       List<VirtualFilePointer> list = new SmartList<VirtualFilePointer>();
+
       for( int i = 0, n = additionalPathModel.size(); i < n; i++ )
-        {
         list.add( (VirtualFilePointer) additionalPathModel.get( i ) );
-        }
-      drivenFacet.setResourcePaths( list );
+
+      cascadingFacet.setResourcePaths( list );
       }
 
     private void doEdit( int index )
@@ -195,18 +197,16 @@ class DrivenFacetEditorTab extends FacetEditorTab
       FileChooserDescriptor fileChooserDescriptor = new FileChooserDescriptor( false, true, false, false, false, false );
       fileChooserDescriptor.setHideIgnored( false );
       VirtualFile virtualFile = FileChooser.chooseFile( fileChooserDescriptor, editorContext.getProject(), index >= 0 ? ( (VirtualFilePointer) additionalPathModel.get( index ) ).getFile() : null );
-      if( virtualFile != null )
-        {
-        VirtualFilePointer filePointer = VirtualFilePointerManager.getInstance().create( virtualFile, drivenFacet.getModule(), null );
-        if( index >= 0 )
-          {
-          additionalPathModel.set( index, filePointer );
-          }
-        else
-          {
-          additionalPathModel.addElement( filePointer );
-          }
-        }
+
+      if( virtualFile == null )
+        return;
+
+      VirtualFilePointer filePointer = VirtualFilePointerManager.getInstance().create( virtualFile, cascadingFacet.getModule(), null );
+
+      if( index >= 0 )
+        additionalPathModel.set( index, filePointer );
+      else
+        additionalPathModel.addElement( filePointer );
       }
     }
 

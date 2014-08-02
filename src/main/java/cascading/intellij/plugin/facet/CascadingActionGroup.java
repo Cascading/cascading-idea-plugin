@@ -31,9 +31,9 @@ import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.psi.JavaDirectoryService;
 import com.intellij.psi.PsiDirectory;
 
-public class DrivenActionGroup extends DefaultActionGroup
+public class CascadingActionGroup extends DefaultActionGroup
   {
-  public DrivenActionGroup()
+  public CascadingActionGroup()
     {
     super( "Cascading", true );
     getTemplatePresentation().setDescription( "Cascading" );
@@ -48,22 +48,22 @@ public class DrivenActionGroup extends DefaultActionGroup
   private static boolean isUnderSourceRoots( final AnActionEvent e )
     {
     final IdeView view = e.getData( DataKeys.IDE_VIEW );
-    if( view != null )
-      {
-      final Module module = e.getData( DataKeys.MODULE );
+    if( view == null )
+      return false;
 
-      if( module != null && DrivenFacet.isLibraryPresent( module ) )
+    final Module module = e.getData( DataKeys.MODULE );
+
+    if( module != null && CascadingFacet.isLibraryPresent( module ) )
+      {
+      ProjectFileIndex projectFileIndex = ProjectRootManager.getInstance( module.getProject() ).getFileIndex();
+
+      for( PsiDirectory dir : view.getDirectories() )
         {
-        ProjectFileIndex projectFileIndex = ProjectRootManager.getInstance( module.getProject() ).getFileIndex();
-        for( PsiDirectory dir : view.getDirectories() )
-          {
-          if( projectFileIndex.isInSourceContent( dir.getVirtualFile() ) && JavaDirectoryService.getInstance().getPackage( dir ) != null )
-            {
-            return true;
-            }
-          }
+        if( projectFileIndex.isInSourceContent( dir.getVirtualFile() ) && JavaDirectoryService.getInstance().getPackage( dir ) != null )
+          return true;
         }
       }
+
     return false;
     }
   }

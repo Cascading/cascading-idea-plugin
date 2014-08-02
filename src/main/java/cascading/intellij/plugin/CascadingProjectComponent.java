@@ -20,21 +20,18 @@
 
 package cascading.intellij.plugin;
 
-import com.intellij.codeInspection.InspectionToolProvider;
-import com.intellij.openapi.components.ApplicationComponent;
-import com.intellij.openapi.components.ServiceManager;
+import com.intellij.openapi.components.ProjectComponent;
+import com.intellij.openapi.project.Project;
 import org.jetbrains.annotations.NotNull;
 
-public class DrivenApplicationComponent implements ApplicationComponent, InspectionToolProvider
+public class CascadingProjectComponent implements ProjectComponent
   {
+  private Project project;
 
-  public static DrivenApplicationComponent get()
+  @SuppressWarnings({"UnusedDeclaration"})
+  public CascadingProjectComponent( Project project )
     {
-    return ServiceManager.getService( DrivenApplicationComponent.class );
-    }
-
-  public DrivenApplicationComponent()
-    {
+    this.project = project;
     }
 
   @Override
@@ -51,12 +48,17 @@ public class DrivenApplicationComponent implements ApplicationComponent, Inspect
   @NotNull
   public String getComponentName()
     {
-    return "DrivenApplicationComponent";
+    return "CascadingProjectComponent";
     }
 
   @Override
-  public Class[] getInspectionClasses()
+  public void projectOpened()
     {
-    return new Class[]{};
     }
+
+  @Override
+  public void projectClosed()
+    {
+    }
+
   }

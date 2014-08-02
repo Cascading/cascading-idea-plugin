@@ -20,17 +20,17 @@
 
 package cascading.intellij.plugin.search;
 
+import cascading.intellij.plugin.facet.CascadingFacet;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointer;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.search.GlobalSearchScopes;
 import org.jetbrains.annotations.NotNull;
-import cascading.intellij.plugin.facet.DrivenFacet;
 
-public final class DrivenSearchScope
+public final class CascadingSearchScope
   {
-  private DrivenSearchScope()
+  private CascadingSearchScope()
     {
     }
 
@@ -38,19 +38,21 @@ public final class DrivenSearchScope
   public static GlobalSearchScope resourcesInModuleWithDependenciesAndLibraries( @NotNull Module module )
     {
     GlobalSearchScope scope = GlobalSearchScope.moduleWithDependenciesAndLibrariesScope( module, true );
+
     // add all additional resource paths
-    DrivenFacet facet = DrivenFacet.getInstance( module );
-    if( facet != null )
+    CascadingFacet facet = CascadingFacet.getInstance( module );
+
+    if( facet == null )
+      return scope;
+
+    for( VirtualFilePointer filePointer : facet.getResourcePaths() )
       {
-      for( VirtualFilePointer filePointer : facet.getResourcePaths() )
-        {
-        VirtualFile virtualFile = filePointer.getFile();
-        if( virtualFile != null )
-          {
-          scope = scope.uniteWith( GlobalSearchScopes.directoryScope( module.getProject(), virtualFile, true ) );
-          }
-        }
+      VirtualFile virtualFile = filePointer.getFile();
+
+      if( virtualFile != null )
+        scope = scope.uniteWith( GlobalSearchScopes.directoryScope( module.getProject(), virtualFile, true ) );
       }
+
     return scope;
     }
 

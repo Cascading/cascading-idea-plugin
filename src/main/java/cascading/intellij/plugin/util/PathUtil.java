@@ -21,13 +21,13 @@
 
 package cascading.intellij.plugin.util;
 
+import java.io.File;
+
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.VfsUtil;
-
-import java.io.File;
 
 public class PathUtil
   {
@@ -43,12 +43,8 @@ public class PathUtil
     Module[] modules = moduleManager.getModules();
 
     if( modules.length > 0 )
-      {
       return new File( modules[ 0 ].getModuleFilePath() ).getParent();
-      }
     else
-      {
       return new File( "." ).getParent();
-      }
     }
   }

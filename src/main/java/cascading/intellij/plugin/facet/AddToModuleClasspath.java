@@ -20,6 +20,8 @@
 
 package cascading.intellij.plugin.facet;
 
+import java.util.List;
+
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.module.Module;
@@ -30,17 +32,9 @@ import com.intellij.openapi.roots.OrderRootType;
 import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.roots.libraries.LibraryTable;
 import com.intellij.openapi.ui.Messages;
-import com.intellij.util.PathUtil;
 
-import java.awt.event.ActionEvent;
-import java.util.List;
-
-/**
- * Created by dhruv on 5/20/14.
- */
 public class AddToModuleClasspath
   {
-
   private Project project;
   Module module = null;
   private List<String> libraryPaths;
@@ -55,32 +49,31 @@ public class AddToModuleClasspath
   public void addLibrary()
     {
     if( module != null && libraryPaths != null )
-      {
       addLibraryToClasspath( module );
-      }
     }
 
   private boolean isLibraryAlreadyInClasspath( LibraryTable libraryTable, String libURL )
     {
     Library[] existingLibraries = libraryTable.getLibraries();
+
     for( Library existingLibrary : existingLibraries )
       {
       String[] urls = existingLibrary.getRootProvider().getUrls( OrderRootType.CLASSES );
+
       for( String existingUrl : urls )
         {
         if( existingUrl.equalsIgnoreCase( libURL ) )
-          {
           return true;
-          }
         }
       }
+
     return false;
     }
 
   private void addLibraryToClasspath( final Module module )
     {
-
     Application application = ApplicationManager.getApplication();
+
     application.runWriteAction( new Runnable()
     {
 
@@ -88,23 +81,23 @@ public class AddToModuleClasspath
       {
       try
         {
-        final ModuleRootManager rootManager = ModuleRootManager.getInstance( module );
-        final ModifiableRootModel rootModel = rootManager.getModifiableModel();
+        ModuleRootManager rootManager = ModuleRootManager.getInstance( module );
+        ModifiableRootModel rootModel = rootManager.getModifiableModel();
+
         for( String libraryPath : libraryPaths )
           {
           String escapedLibraryURL = cascading.intellij.plugin.util.PathUtil.escapeLibraryURL( libraryPath );
-          final LibraryTable libraryTable = rootModel.getModuleLibraryTable();
+          LibraryTable libraryTable = rootModel.getModuleLibraryTable();
+
           addLibrary( libraryTable, libraryPath, escapedLibraryURL );
           }
+
         if( rootModel.isWritable() )
-          {
           rootModel.commit();
-          }
         else
-          {
           Messages.showErrorDialog( project, "The project configuration doesn't allow adding libraries to the classpath!", "Error" );
-          }
         }
+
       catch( Throwable e )
         {
         Messages.showErrorDialog( project, "Error while adding library to classpath: " + e, "Error" );

@@ -22,6 +22,7 @@ package cascading.intellij.plugin.facet;
 
 import javax.swing.*;
 
+import cascading.intellij.plugin.Constants;
 import com.intellij.facet.Facet;
 import com.intellij.facet.FacetType;
 import com.intellij.facet.FacetTypeId;
@@ -35,36 +36,34 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleType;
 import com.intellij.patterns.ElementPattern;
 import com.intellij.patterns.PatternCondition;
-import com.intellij.psi.JavaPsiFacade;
 import com.intellij.util.ProcessingContext;
 import com.intellij.util.indexing.FileContent;
-import cascading.intellij.plugin.Constants;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class DrivenFacetType extends FacetType<DrivenFacet, DrivenFacetConfiguration>
+public class CascadingFacetType extends FacetType<CascadingFacet, CascadingFacetConfiguration>
   {
-
   private static final String STRING_ID = "cascading";
   private static final String PRESENTABLE_NAME = "Cascading";
-  public static final FacetTypeId<DrivenFacet> ID = new FacetTypeId<DrivenFacet>( STRING_ID );
-  public static final DrivenFacetType INSTANCE = new DrivenFacetType();
 
-  public DrivenFacetType()
+  public static final FacetTypeId<CascadingFacet> ID = new FacetTypeId<CascadingFacet>( STRING_ID );
+  public static final CascadingFacetType INSTANCE = new CascadingFacetType();
+
+  public CascadingFacetType()
     {
     super( ID, STRING_ID, PRESENTABLE_NAME );
     }
 
   @Override
-  public DrivenFacetConfiguration createDefaultConfiguration()
+  public CascadingFacetConfiguration createDefaultConfiguration()
     {
-    return new DrivenFacetConfiguration();
+    return new CascadingFacetConfiguration();
     }
 
   @Override
-  public DrivenFacet createFacet( @NotNull Module module, String name, @NotNull DrivenFacetConfiguration configuration, @Nullable Facet underlyingFacet )
+  public CascadingFacet createFacet( @NotNull Module module, String name, @NotNull CascadingFacetConfiguration configuration, @Nullable Facet underlyingFacet )
     {
-    return new DrivenFacet( this, module, name, configuration, underlyingFacet );
+    return new CascadingFacet( this, module, name, configuration, underlyingFacet );
     }
 
   @Override
@@ -85,17 +84,16 @@ public class DrivenFacetType extends FacetType<DrivenFacet, DrivenFacetConfigura
     return Constants.CASCADING_ICON;
     }
 
-  public static class DrivenFacetDetector extends FacetBasedFrameworkDetector<DrivenFacet, DrivenFacetConfiguration>
+  public static class CascadingFacetDetector extends FacetBasedFrameworkDetector<CascadingFacet, CascadingFacetConfiguration>
     {
-    public DrivenFacetDetector()
+    public CascadingFacetDetector()
       {
       super( STRING_ID );
       }
 
     @Override
-    public FacetType<DrivenFacet, DrivenFacetConfiguration> getFacetType()
+    public FacetType<CascadingFacet, CascadingFacetConfiguration> getFacetType()
       {
-      //noinspection unchecked
       return FacetTypeRegistry.getInstance().findFacetType( STRING_ID );
       }
 

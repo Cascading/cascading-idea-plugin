@@ -27,43 +27,74 @@ import java.io.FileReader;
 import java.io.IOException;
 
 import cascading.intellij.plugin.util.DrivenAppIDFilePath;
+import com.intellij.ide.BrowserUtil;
+import com.intellij.openapi.actionSystem.ActionPlaces;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.ide.BrowserUtil;
 import com.intellij.openapi.diagnostic.Logger;
 
 public class LaunchDrivenAction extends AnAction
   {
-
   private static final Logger LOG = Logger.getInstance( "#cascading.intellij.plugin.actions.LaunchDrivenAction" );
 
   public void actionPerformed( AnActionEvent e )
     {
-
     String tmpDirPath = DrivenAppIDFilePath.getOrCreateTempFilePath();
-    LOG.info( "temp file path = " + tmpDirPath );
-    File tmpDir = new File( tmpDirPath );
-    BufferedReader br = null;
+
+    LOG.info( "driven app url file path: " + tmpDirPath );
+
+    File file = new File( tmpDirPath );
+
+    boolean exists = file.exists() && file.length() != 0;
+
+    if( !exists )
+      return;
+
+    BufferedReader br;
+
     try
       {
-      br = new BufferedReader( new FileReader( tmpDir ) );
+      br = new BufferedReader( new FileReader( file ) );
       }
     catch( FileNotFoundException exception )
       {
-      exception.printStackTrace();
+      LOG.info( "unable to open file: " + file, exception );
+      return;
       }
-    String appid = null;
+
+    String appURL;
+
     try
       {
-      appid = br.readLine();
+      appURL = br.readLine();
       }
     catch( IOException exception )
       {
-      exception.printStackTrace();
+      LOG.info( "unable to read file: " + file, exception );
+      return;
       }
-    BrowserUtil.browse( appid );
+
+    if( appURL == null || appURL.isEmpty() )
+      return;
+
+    BrowserUtil.browse( appURL );
     }
 
+  @Override
+  public void update( AnActionEvent event )
+    {
+    String tmpDirPath = DrivenAppIDFilePath.getOrCreateTempFilePath();
+
+    LOG.info( "driven app url file path: " + tmpDirPath );
+
+    File file = new File( tmpDirPath );
+    boolean enable = file.exists() && file.length() != 0;
+
+    if( ActionPlaces.MAIN_MENU.equals( event.getPlace() ) || ActionPlaces.DEBUGGER_TOOLBAR.equals( event.getPlace() ) )
+      event.getPresentation().setEnabled( enable );
+    else
+      event.getPresentation().setVisible( enable );
+    }
   }
 
 

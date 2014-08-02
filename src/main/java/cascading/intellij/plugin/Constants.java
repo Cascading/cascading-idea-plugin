@@ -26,7 +26,5 @@ import com.intellij.openapi.util.IconLoader;
 
 public interface Constants
   {
-
-  public static final Icon CASCADING_ICON = IconLoader.findIcon( "/icons/cascading-logo-2.png" );
-
+  public static final Icon CASCADING_ICON = IconLoader.findIcon( "/icons/cascading-logo.png" );
   }

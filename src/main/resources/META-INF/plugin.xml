@@ -2,14 +2,14 @@
   <id>com.concurrent.intellij.plugin</id>
   <name>Cascading Plugin</name>
   <version>1.0</version>
-  <vendor email="dkumar@concurrentinc.com" url="http://www.concurrentinc.com">Concurrent Inc.</vendor>
+  <vendor email="info@concurrentinc.com" url="http://www.concurrentinc.com">Concurrent Inc.</vendor>
 
   <description><![CDATA[
-     <b>Cascading Plugin</b> allows you to quickly develop and debug Cascading applications inside IntelliJ IDEA IDE.
+     The <b>Cascading IDEA Plugin</b> allows you to quickly develop and debug Cascading applications inside IntelliJ IDEA IDE.
         It allows you to:
      <ul>
-        <li>Download and add the Cascading Core and the Driven Plugin jars to the classpath of the project.</li>
-        <li>Launch Driven in the browser from the debug panel.</li>
+        <li>Add the Driven Plugin jars to the IDE classpath of the project.</li>
+        <li>Launch Driven in the browser.</li>
      </ul>
     ]]></description>
 
@@ -18,35 +18,35 @@
 
   <idea-version since-build="131"/>
 
-
   <extensions defaultExtensionNs="com.intellij">
-      <facetType implementation="cascading.intellij.plugin.facet.DrivenFacetType"/>
-      <framework.detector implementation="cascading.intellij.plugin.facet.DrivenFacetType$DrivenFacetDetector"/>
-      <frameworkSupport implementation="cascading.intellij.plugin.facet.DrivenFrameworkSupportProvider"/>
-      <library.type implementation="cascading.intellij.plugin.library.DrivenLibraryType"/>
-      <runConfigurationExtension implementation="cascading.intellij.plugin.extensions.CascadingRunDebugExtension"/>
-    <!--
-    <applicationService serviceInterface="com.intellij.framework.library.DownloadableLibraryService"
-                          serviceImplementation="cascading.intellij.plugin.library.DrivenDownloadableLibraryServiceImpl" />
-                          -->
+    <!--<facetType implementation="cascading.intellij.plugin.facet.CascadingFacetType"/>-->
+    <!--<framework.detector implementation="cascading.intellij.plugin.facet.CascadingFacetType$CascadingFacetDetector"/>-->
+    <!--<frameworkSupport implementation="cascading.intellij.plugin.facet.DrivenFrameworkSupportProvider"/>-->
+    <!--<library.type implementation="cascading.intellij.plugin.library.CascadingLibraryType"/>-->
+
+    <runConfigurationExtension
+      implementation="cascading.intellij.plugin.extensions.CascadingRunConfigurationExtension"/>
+
   </extensions>
 
   <application-components>
     <component>
-      <implementation-class>cascading.intellij.plugin.DrivenApplicationComponent</implementation-class>
+      <implementation-class>cascading.intellij.plugin.CascadingApplicationComponent</implementation-class>
     </component>
   </application-components>
 
-  <project-components />
+  <project-components/>
 
   <actions>
-    <action id="DrivenUI" class="cascading.intellij.plugin.actions.LaunchDrivenAction" text="Show Driven UI"
-            description="Shows the driven UI for this application" icon="/icons/cascading-logo-2.png">
+    <action id="DrivenUI" class="cascading.intellij.plugin.actions.LaunchDrivenAction" text="View in Driven"
+            description="Shows the driven UI for this application" icon="/icons/driven-logo.png">
       <keyboard-shortcut keymap="$default" first-keystroke="ctrl shift Z"/>
-      <add-to-group group-id="XDebugger.ToolWindow.LeftToolbar" anchor="first"/>
+      <add-to-group group-id="XDebugger.ToolWindow.TopToolbar" anchor="after" relative-to-action="ShowExecutionPoint"/>
+      <add-to-group group-id="RunMenu" anchor="after" relative-to-action="ChooseDebugConfiguration"/>
+      <add-to-group group-id="ConsoleView.PopupMenu" anchor="first"/>
     </action>
 
-    <group id="WicketForgeCreateGroup" class="cascading.intellij.plugin.facet.DrivenActionGroup" text="Cascading">
+    <group id="WicketForgeCreateGroup" class="cascading.intellij.plugin.facet.CascadingActionGroup" text="Cascading">
             <add-to-group group-id="NewGroup" anchor="last"/>
         </group>
   </actions>

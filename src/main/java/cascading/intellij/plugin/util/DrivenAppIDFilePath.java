@@ -37,25 +37,23 @@ public final class DrivenAppIDFilePath
 
   public static String getOrCreateTempFilePath()
     {
-
-    if( drivenFilePath == null )
-      {
-      File tmpFile;
-      try
-        {
-        tmpFile = File.createTempFile( "driven", ".appid" );
-        drivenFilePath = tmpFile.getAbsolutePath();
-        LOG.info( "Created temporary file for writing Driven AppID at " + drivenFilePath );
-        }
-      catch( IOException exception )
-        {
-        exception.printStackTrace();
-        }
+    if( drivenFilePath != null )
       return drivenFilePath;
+
+    File tmpFile;
+
+    try
+      {
+      tmpFile = File.createTempFile( "driven", ".appid" );
+      drivenFilePath = tmpFile.getAbsolutePath();
+
+      LOG.info( "Created temporary file for writing Driven AppID at " + drivenFilePath );
+      }
+    catch( IOException exception )
+      {
+      LOG.warn( "unable to create temp path", exception );
       }
 
-    else
-      return drivenFilePath;
+    return drivenFilePath;
     }
-
   }

@@ -20,49 +20,30 @@
 
 package cascading.intellij.plugin.facet;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
+import cascading.intellij.plugin.library.CascadingLibraryType;
 import com.intellij.facet.ui.FacetBasedFrameworkSupportProvider;
-import com.intellij.facet.ui.libraries.LibraryInfo;
 import com.intellij.framework.library.DownloadableLibraryService;
 import com.intellij.framework.library.FrameworkSupportWithLibrary;
 import com.intellij.ide.util.frameworkSupport.FrameworkSupportConfigurableBase;
 import com.intellij.ide.util.frameworkSupport.FrameworkSupportModel;
 import com.intellij.ide.util.frameworkSupport.FrameworkSupportProviderBase;
 import com.intellij.ide.util.frameworkSupport.FrameworkVersion;
-import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.roots.ModifiableRootModel;
-import com.intellij.openapi.roots.OrderRootType;
-import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.roots.ui.configuration.libraries.CustomLibraryDescription;
-import com.intellij.openapi.util.Pair;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.VirtualFileManager;
-import com.intellij.openapi.vfs.impl.jar.JarFileSystemImpl;
-import com.intellij.util.download.DownloadableFileDescription;
-import com.intellij.util.download.DownloadableFileService;
-import com.intellij.util.download.FileDownloader;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import cascading.intellij.plugin.library.DrivenLibraryType;
 
-import static com.intellij.facet.ui.libraries.MavenLibraryUtil.createMavenJarInfo;
-
-public class DrivenFrameworkSupportProvider extends FacetBasedFrameworkSupportProvider<DrivenFacet>
+public class DrivenFrameworkSupportProvider extends FacetBasedFrameworkSupportProvider<CascadingFacet>
   {
-
-  private static final String DOWNLOAD_URL = "http://eap.concurrentinc.com/driven/1.0/driven-plugin/driven-plugin-1.0-eap-57-io.jar";
-
   public DrivenFrameworkSupportProvider()
     {
-    super( DrivenFacetType.INSTANCE );
+    super( CascadingFacetType.INSTANCE );
     }
 
   @Override
-  protected void setupConfiguration( DrivenFacet facet, ModifiableRootModel rootModel, FrameworkVersion version )
+  protected void setupConfiguration( CascadingFacet facet, ModifiableRootModel rootModel, FrameworkVersion version )
     {
     //
     }
@@ -139,7 +120,7 @@ public class DrivenFrameworkSupportProvider extends FacetBasedFrameworkSupportPr
     @NotNull
     public CustomLibraryDescription createLibraryDescription()
       {
-      return DownloadableLibraryService.getInstance().createDescriptionForType( DrivenLibraryType.class );
+      return DownloadableLibraryService.getInstance().createDescriptionForType( CascadingLibraryType.class );
       }
 
     @Override

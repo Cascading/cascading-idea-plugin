@@ -23,14 +23,12 @@ package cascading.intellij.plugin.library;
 import java.net.URL;
 
 import com.intellij.framework.library.DownloadableLibraryDescription;
-import com.intellij.framework.library.DownloadableLibraryService;
 import com.intellij.framework.library.DownloadableLibraryType;
 import com.intellij.framework.library.LibraryVersionProperties;
 import com.intellij.framework.library.impl.DownloadableLibraryServiceImpl;
 import com.intellij.openapi.roots.libraries.ui.LibraryEditorComponent;
 import com.intellij.openapi.roots.libraries.ui.LibraryPropertiesEditor;
 import com.intellij.openapi.roots.ui.configuration.libraries.CustomLibraryDescription;
-import com.intellij.util.download.impl.DownloadableFileServiceImpl;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -45,8 +43,6 @@ public class DrivenDownloadableLibraryServiceImpl extends DownloadableLibrarySer
                                                                   @NotNull LibraryEditorComponent<LibraryVersionProperties> editorComponent,
                                                                   @NotNull DownloadableLibraryType libraryType )
     {
-
-    System.out.println( "inside createDownloadableLibraryEditor" );
     return new DrivenDownloadableLibraryPropertiesEditor( description, editorComponent, libraryType );
     }
 
@@ -61,7 +57,6 @@ public class DrivenDownloadableLibraryServiceImpl extends DownloadableLibrarySer
   @Override
   public DownloadableLibraryDescription createLibraryDescription( @NotNull String groupId, @NotNull URL... localUrls )
     {
-    System.out.println( "inside createLibraryDescription" );
     return super.createLibraryDescription( groupId, localUrls );
     }
   }
