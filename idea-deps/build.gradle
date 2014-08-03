@@ -22,6 +22,3 @@ sourceCompatibility = 1.5
 version = '1.0'
 
 ant.importBuild '../intellij-src/build.xml'
-
-rootProject.ideaProject.dependsOn build
-

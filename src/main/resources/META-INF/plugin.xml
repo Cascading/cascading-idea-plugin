@@ -1,32 +1,46 @@
-<idea-plugin version="2">
-  <id>com.concurrent.intellij.plugin</id>
+<idea-plugin version="2" url="https://github.com/Cascading/cascading-idea-plugin">
+
+  <id>cascading</id>
   <name>Cascading Plugin</name>
   <version>1.0</version>
   <vendor email="info@concurrentinc.com" url="http://www.concurrentinc.com">Concurrent Inc.</vendor>
 
   <description><![CDATA[
-     The <b>Cascading IDEA Plugin</b> allows you to quickly develop and debug Cascading applications inside IntelliJ IDEA IDE.
-        It allows you to:
-     <ul>
-        <li>Add the Driven Plugin jars to the IDE classpath of the project.</li>
-        <li>Launch Driven in the browser.</li>
-     </ul>
-    ]]></description>
+
+  <p>The <b>Cascading IDEA Plugin</b> allows you to quickly develop and debug Cascading applications inside Intellij IDEA IDE.</p>
+  <p/>
+  <h3>Usage:</h3>
+
+  <p>After installing the Driven IO plugin into your project, a "Show in Driven" icon will appear when a Cascading
+  application is run from the Run or Debugger menus.</p>
+
+  <p/>
+  <p>How to get started with Driven:</p>
+
+  <ul><la>
+  <a href="http://docs.cascading.io/driven/1.0/getting-started/">http://docs.cascading.io/driven/1.0/getting-started/</a>
+  </la></ul>
+
+  <p/>
+  <p>To add new capabilities to this plugin, visit:</p>
+
+  <ul><la>
+  <a href="https://github.com/Cascading/cascading-idea-plugin">https://github.com/Cascading/cascading-idea-plugin</a>
+  </la></ul>
+
+  <p/>
+]]></description>
 
   <change-notes>
-  </change-notes>
+<![CDATA[
+  <p>See project page: <a href="https://github.com/Cascading/cascading-idea-plugin">https://github.com/Cascading/cascading-idea-plugin</a></p>
+]]></change-notes>
 
-  <idea-version since-build="131"/>
+  <idea-version since-build="133"/>
 
   <extensions defaultExtensionNs="com.intellij">
-    <!--<facetType implementation="cascading.intellij.plugin.facet.CascadingFacetType"/>-->
-    <!--<framework.detector implementation="cascading.intellij.plugin.facet.CascadingFacetType$CascadingFacetDetector"/>-->
-    <!--<frameworkSupport implementation="cascading.intellij.plugin.facet.DrivenFrameworkSupportProvider"/>-->
-    <!--<library.type implementation="cascading.intellij.plugin.library.CascadingLibraryType"/>-->
-
     <runConfigurationExtension
       implementation="cascading.intellij.plugin.extensions.CascadingRunConfigurationExtension"/>
-
   </extensions>
 
   <application-components>

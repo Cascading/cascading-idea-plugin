@@ -18,6 +18,9 @@
  * limitations under the License.
  */
 
+apply from: 'etc/version.gradle'
+apply from: 'etc/s3Upload.gradle'
+
 apply plugin: 'java'
 apply from: 'etc/idea.gradle'
 
@@ -30,6 +33,7 @@ repositories {
 configurations {
   ideaCompile
 }
+version = releaseVersion
 
 dependencies {
 
@@ -40,9 +44,53 @@ dependencies {
 
 compileJava {
 
-  dependsOn project(':idea-deps').build
+  dependsOn project( ':idea-deps' ).build
 
   // prevent local libs from entering the idea module file
   classpath += configurations.ideaCompile
 }
 
+task filterXML( type: Copy ) {
+  from processResources.source
+  into processResources.destinationDir
+  include '**/*.xml'
+
+  filter { String line ->
+
+    if( line == null || !line.contains( "<version>1.0</version>" ) )
+      return line
+
+    line.replaceFirst( /1\.0/, "${version}" )
+  }
+}
+
+processResources {
+  dependsOn << filterXML
+  exclude '**/*.xml'
+}
+
+task assembleDist( dependsOn: jar ) {
+  s3UploadArtifacts.dependsOn << assembleDist
+  s3UploadPluginMeta.dependsOn << assembleDist
+}
+
+assembleDist << {
+
+  file( s3UploadArtifacts.source ).delete();
+  file( s3UploadArtifacts.source ).mkdir();
+  file( s3UploadPluginMeta.source ).delete();
+  file( s3UploadPluginMeta.source ).mkdir();
+
+  copy {
+    into s3UploadArtifacts.source
+    from jar.archivePath
+  }
+
+  file( "${s3UploadArtifacts.source}/latest.txt" ).write( "http://${s3UploadArtifacts.destination}${jar.archiveName}" )
+
+  // see: http://www.jetbrains.com/idea/webhelp/adding-plugins-to-enterprise-repositories.html
+  file( "${s3UploadPluginMeta.source}/updatePlugins.xml" )
+          .write(
+          "<plugins>\n<plugin id=\"cascading\" url=\"http://${s3UploadArtifacts.destination}${jar.archiveName}\" version=\"${releaseVersion}\"/>\n</plugins>"
+  )
+}
